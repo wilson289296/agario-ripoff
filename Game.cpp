@@ -9,9 +9,9 @@
 Game *singleton;
 
 Game::Game(){
-    
+    srand(time(NULL));
 	test = new Circle(0.0f, 0.0f, 0.01f, 1.0f, 0.0f, 0.0f);
-	orbs = new std::list<Circle*>;
+	orbs = new std::vector<Circle*>;
 	xVelo = 0.0f;
 	yVelo = 0.0f;
 	
@@ -29,37 +29,43 @@ void timer(int id){
 	
 	singleton->createOrbs();
 	
-    glutTimerFunc(100, timer, id);
+    glutTimerFunc(500, timer, id);
 }
 
 void Game::action(){
 	circleMove(xVelo, yVelo);
-	std::list<Circle*>::iterator it = orbs->begin();
-	while(it != orbs->end())
-	{
-		if((*it)->contains(test)) {
-			test->setRad(test->getRad() + (*it)->getRad());
-			delete *it;
-			orbs->erase(it);
-			break;
-		}
-		else
-			it++;
-	}
 	/*
-	for(std::list<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
+	std::vector<Circle*>::iterator it = orbs->begin();
+	try {
+		while(it != orbs->end())
+		{
+			if((*it)->contains(test)) {
+				test->setRad(test->getRad() + ((*it)->getRad()/2));
+				it = orbs->erase(it);
+				break;
+			}
+			else {
+				++it;
+			}
+		}
+	}
+	catch (int e) {
+		std::cout << e << std::endl;
+	}
+	*/
+	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		if((*it)->contains(test)) {
 			std::cout << "we insidie" << std::endl;
 			test->setRad(test->getRad() + (*it)->getRad());
 			//delete orbs->at(*it);
 			//orbs->erase(it);
 		}
-	}*/
+	}
 }
 
 void Game::draw() const {
     test->draw();
-	for(std::list<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
+	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		(*it)->draw();
 	}
 }
@@ -69,16 +75,16 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		timer(0);
     }
     else if (key == 'w'){
-        yVelo = 0.001f;
+        yVelo = 0.0005f;
     }
     else if (key == 's'){
-        yVelo = -0.001f;
+        yVelo = -0.0005f;
     }
 	else if (key == 'd'){
-        xVelo = 0.001f;
+        xVelo = 0.0005f;
     }
     else if (key == 'a'){
-        xVelo = -0.001f;
+        xVelo = -0.0005f;
     }
 }
 
@@ -88,15 +94,19 @@ void Game::circleMove(float x, float y) {
 }
 
 void Game::createOrbs() {
-	if(orbs->size() < 10)
-	{
-		srand(time(NULL));
-		float randX = (((float)rand() / (float) RAND_MAX) * 2) - 1;
-		float randY = (((float)rand() / (float) RAND_MAX) * 2) - 1;
-		//std::cout << "Orb created at (" << randX << ", " << randY << ")." << std::endl;
-		Circle *temp = new Circle(randX, randY);
-		orbs->push_back(temp);
+	try{
+		//if(orbs->size() < 2)
+		//{
+			float randX = (((float)rand() / (float) RAND_MAX) * 4.0) - 2;
+			float randY = (((float)rand() / (float) RAND_MAX) * 2.0) - 1;
+			std::cout << "Orb created at (" << randX << ", " << randY << ")." << std::endl;
+			Circle *temp = new Circle(randX, randY);
+			orbs->push_back(temp);
+		//}
 	}
+	catch(int e) {
+		std::cout << e << std::endl;
+	}	
 }
 
 Game::~Game(){

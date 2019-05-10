@@ -5,16 +5,17 @@
 #include "AnimatedRect.h"
 #include "Timer.h"
 #include "Circle.h"
-#include <list>
+#include <vector>
 
 class Game: public AppComponent, private Timer{
 
 public:
 	
-	std::list<Circle*> *orbs;
+	std::vector<Circle*> *orbs;
 	Circle *test;
 	float xVelo;
 	float yVelo;
+	int eaten;
 
     Game();
     
