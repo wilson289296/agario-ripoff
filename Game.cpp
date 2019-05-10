@@ -10,10 +10,8 @@ Game *singleton;
 
 Game::Game(){
     srand(time(NULL));
-	test = new Circle(0.0f, 0.0f, 0.01f, 1.0f, 0.0f, 0.0f);
+	test = new Player(0.0f, 0.0f, 0.01f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	orbs = new std::vector<Circle*>;
-	xVelo = 0.0f;
-	yVelo = 0.0f;
 	
     setRate(1);
 	singleton = this;
@@ -33,37 +31,22 @@ void timer(int id){
 }
 
 void Game::action(){
-	//circleMove(xVelo, yVelo);
-	/*
-	std::vector<Circle*>::iterator it = orbs->begin();
-	try {
-		while(it != orbs->end())
-		{
-			if((*it)->contains(test)) {
-				test->setRad(test->getRad() + ((*it)->getRad()/2));
-				it = orbs->erase(it);
-				break;
-			}
-			else {
-				++it;
-			}
-		}
-	}
-	catch (int e) {
-		std::cout << e << std::endl;
-	}
-	*/
+
+	test->playerMove();
+	
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
-		if((*it)->contains(test)) {
-			std::cout << "we insidie" << std::endl;
-			test->setRad(test->getRad() + (*it)->getRad());
+		if((*it)->contains(test->getCircle())) {
+			//std::cout << "we insidie" << std::endl;
+			test->getCircle()->setRad(test->getCircle()->getRad() + (*it)->getRad());
 			//delete orbs->at(*it);
-			//orbs->erase(it);
+			orbs->erase(it);
+			break;
 		}
 	}
 }
 
 void Game::draw() const {
+	test->draw();
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		(*it)->draw();
 	}
@@ -75,37 +58,21 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		timer(0);
     }
     else if (key == 'w'){
-		if(yVelo >= 0) yVelo += 0.0001f;
-		else yVelo += 0.0002f;
+		if(test->getYVelo() >= 0) test->setYVelo(test->getYVelo() + 0.0001f);
+		else test->setYVelo(test->getYVelo() + 0.0002f);
     }
     else if (key == 's'){
-		if(yVelo <= 0) yVelo += -0.0001f;
-		else yVelo += -0.0002f;
+		if(test->getYVelo() <= 0) test->setYVelo(test->getYVelo() - 0.0001f);
+		else test->setYVelo(test->getYVelo() - 0.0002f);
     }
 	else if (key == 'd'){
-		if(yVelo >= 0) xVelo += 0.0001f;
-		else xVelo += 0.0002f;
+		if(test->getXVelo() >= 0) test->setXVelo(test->getXVelo() + 0.0001f);
+		else test->setXVelo(test->getXVelo() + 0.0002f);
     }
     else if (key == 'a'){
-		if(yVelo <= 0) xVelo += -0.0001f;
-		else xVelo += -0.0002f;
+		if(test->getXVelo() <= 0) test->setXVelo(test->getXVelo() - 0.0001f);
+		else test->setXVelo(test->getXVelo() - 0.0002f);
     }
-}
-
-void Game::circleMove(float x, float y) {
-	if(test->getX() > 1.5 || test->getX() < -1.5){
-		xVelo = 0;
-		if(test->getX() > 1.5) test->setX(1.5);
-		else test->setX(-1.5);
-	}
-	else test->setX(test->getX() + xVelo);
-	
-	if(test->getY() > 1 || test->getY() < -1){
-		yVelo = 0;
-		if(test->getY() > 1) test->setY(1);
-		else test->setY(-1);
-	}
-	else test->setY(test->getY() + yVelo);
 }
 
 void Game::createOrbs() {

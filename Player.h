@@ -16,9 +16,10 @@ public:
 	
 	float getXVelo();
 	float getYVelo();
+	Circle *getCircle();
 	
 	void draw() const;
-	void playerMove(float, float);
+	void playerMove();
     
     virtual ~Player(){}
 };

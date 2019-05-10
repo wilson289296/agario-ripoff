@@ -23,11 +23,27 @@ float Player::getYVelo()
 	return yVelo;
 }
 
+Circle* Player::getCircle()
+{
+	return user;
+}
+
 void Player::draw() const {
     user->draw();
 }
 
-void Player::playerMove(float x, float y) {
-	user->setX(user->getX() + xVelo);
-	user->setY(user->getY() + yVelo);
+void Player::playerMove() {
+	if(user->getX() > 1.5 || user->getX() < -1.5){
+		xVelo = 0;
+		if(user->getX() > 1.5) user->setX(1.5);
+		else user->setX(-1.5);
+	}
+	else user->setX(user->getX() + xVelo);
+	
+	if(user->getY() > 1 || user->getY() < -1){
+		yVelo = 0;
+		if(user->getY() > 1) user->setY(1);
+		else user->setY(-1);
+	}
+	else user->setY(user->getY() + yVelo);
 }
