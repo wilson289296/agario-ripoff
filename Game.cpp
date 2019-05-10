@@ -58,20 +58,16 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		timer(0);
     }
     else if (key == 'w'){
-		if(test->getYVelo() >= 0) test->setYVelo(test->getYVelo() + 0.0001f);
-		else test->setYVelo(test->getYVelo() + 0.0002f);
+		test->moveUp();
     }
     else if (key == 's'){
-		if(test->getYVelo() <= 0) test->setYVelo(test->getYVelo() - 0.0001f);
-		else test->setYVelo(test->getYVelo() - 0.0002f);
+		test->moveDown();
     }
 	else if (key == 'd'){
-		if(test->getXVelo() >= 0) test->setXVelo(test->getXVelo() + 0.0001f);
-		else test->setXVelo(test->getXVelo() + 0.0002f);
+		test->moveRight();
     }
     else if (key == 'a'){
-		if(test->getXVelo() <= 0) test->setXVelo(test->getXVelo() - 0.0001f);
-		else test->setXVelo(test->getXVelo() - 0.0002f);
+		test->moveLeft();
     }
 }
 
@@ -81,7 +77,7 @@ void Game::createOrbs() {
 		//{
 			float randX = (((float)rand() / (float) RAND_MAX) * 4.0) - 2;
 			float randY = (((float)rand() / (float) RAND_MAX) * 2.0) - 1;
-			std::cout << "Orb created at (" << randX << ", " << randY << ")." << std::endl;
+			//std::cout << "Orb created at (" << randX << ", " << randY << ")." << std::endl;
 			Circle *temp = new Circle(randX, randY);
 			orbs->push_back(temp);
 		//}

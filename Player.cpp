@@ -32,6 +32,35 @@ void Player::draw() const {
     user->draw();
 }
 
+void Player::moveUp()
+{
+	if(yVelo >= 0) 
+		yVelo += 0.0001f;
+	else 
+		yVelo += 0.0002f;
+}
+void Player::moveDown()
+{
+	if(yVelo <= 0) 
+		yVelo -= 0.0001f;
+	else 
+		yVelo -= 0.0002f;
+}
+void Player::moveRight()
+{
+	if(xVelo >= 0) 
+		xVelo += 0.0001f;
+	else 
+		xVelo += 0.0002f;
+}
+void Player::moveLeft()
+{
+	if(xVelo <= 0) 
+		xVelo -= 0.0001f;
+	else 
+		xVelo -= 0.0002f;
+}
+
 void Player::playerMove() {
 	if(user->getX() > 1.5 || user->getX() < -1.5){
 		xVelo = 0;
