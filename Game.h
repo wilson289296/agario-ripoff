@@ -20,6 +20,7 @@ public:
     
     void draw() const ;
     void handleKeyDown(unsigned char, float, float);
+	void handleKeyUp(unsigned char, float, float);
 	void circleMove(float, float);
 	void createOrbs();
     

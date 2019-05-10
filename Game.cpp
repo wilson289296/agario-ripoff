@@ -65,6 +65,7 @@ void Game::draw() const {
 }
 
 void Game::handleKeyDown(unsigned char key, float x, float y){
+	std::cout << "called\n";
     if (key == ' '){
 		timer(0);
     }
@@ -79,6 +80,24 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
     }
     else if (key == 'a'){
         xVelo = -0.001f;
+    }
+}
+
+void Game::handleKeyUp(unsigned char key, float x, float y){
+	if (key == ' '){
+		timer(0);
+    }
+    else if (key == 'w'){
+        yVelo = 0;
+    }
+    else if (key == 's'){
+        yVelo = 0;
+    }
+	else if (key == 'd'){
+        xVelo = 0;
+    }
+    else if (key == 'a'){
+        xVelo = 0;
     }
 }
 
