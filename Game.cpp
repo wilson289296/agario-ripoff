@@ -65,45 +65,42 @@ void Game::draw() const {
 }
 
 void Game::handleKeyDown(unsigned char key, float x, float y){
-	std::cout << "called\n";
+
     if (key == ' '){
 		timer(0);
     }
     else if (key == 'w'){
-        yVelo = 0.001f;
+		if(yVelo >= 0) yVelo += 0.0001f;
+		else yVelo += 0.0002f;
     }
     else if (key == 's'){
-        yVelo = -0.001f;
+		if(yVelo <= 0) yVelo += -0.0001f;
+		else yVelo += -0.0002f;
     }
 	else if (key == 'd'){
-        xVelo = 0.001f;
+		if(yVelo >= 0) xVelo += 0.0001f;
+		else xVelo += 0.0002f;
     }
     else if (key == 'a'){
-        xVelo = -0.001f;
-    }
-}
-
-void Game::handleKeyUp(unsigned char key, float x, float y){
-	if (key == ' '){
-		timer(0);
-    }
-    else if (key == 'w'){
-        yVelo = 0;
-    }
-    else if (key == 's'){
-        yVelo = 0;
-    }
-	else if (key == 'd'){
-        xVelo = 0;
-    }
-    else if (key == 'a'){
-        xVelo = 0;
+		if(yVelo <= 0) xVelo += -0.0001f;
+		else xVelo += -0.0002f;
     }
 }
 
 void Game::circleMove(float x, float y) {
-	test->setX(test->getX() + xVelo);
-	test->setY(test->getY() + yVelo);
+	if(test->getX() > 1.5 || test->getX() < -1.5){
+		xVelo = 0;
+		if(test->getX() > 1.5) test->setX(1.5);
+		else test->setX(-1.5);
+	}
+	else test->setX(test->getX() + xVelo);
+	
+	if(test->getY() > 1 || test->getY() < -1){
+		yVelo = 0;
+		if(test->getY() > 1) test->setY(1);
+		else test->setY(-1);
+	}
+	else test->setY(test->getY() + yVelo);
 }
 
 void Game::createOrbs() {

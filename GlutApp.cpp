@@ -180,7 +180,6 @@ void GlutApp::glutKeyUpCB(unsigned char key, int x, int y){
     windowToScene(mx, my);
     
     singleton->keyUp(key, mx, my);
-	std::cout << "key up" << std::endl;
 }
 
 void GlutApp::glutMouseCB(int b, int s, int x, int y){
