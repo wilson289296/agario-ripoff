@@ -21,10 +21,9 @@ public:
     
     void draw() const ;
     void handleKeyDown(unsigned char, float, float);
-	void circleMove(float, float);
-	void createOrbs();
     
     void action();
+	void createOrbs();
 	
 	friend void timer(int);
 

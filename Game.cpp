@@ -33,7 +33,7 @@ void timer(int id){
 }
 
 void Game::action(){
-	circleMove(xVelo, yVelo);
+	//circleMove(xVelo, yVelo);
 	/*
 	std::vector<Circle*>::iterator it = orbs->begin();
 	try {
@@ -64,7 +64,6 @@ void Game::action(){
 }
 
 void Game::draw() const {
-    test->draw();
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		(*it)->draw();
 	}
@@ -86,11 +85,6 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
     else if (key == 'a'){
         xVelo = -0.0005f;
     }
-}
-
-void Game::circleMove(float x, float y) {
-	test->setX(test->getX() + xVelo);
-	test->setY(test->getY() + yVelo);
 }
 
 void Game::createOrbs() {
