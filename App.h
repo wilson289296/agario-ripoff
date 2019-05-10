@@ -23,6 +23,10 @@ public:
     void keyDown(unsigned char key, float x, float y);
 	
 	void keyUp(unsigned char key, float x, float y);
+	
+	void specialKeyDown(int, float, float);
+	
+    void specialKeyUp(int, float, float);
     
     ~App();
 };

@@ -15,7 +15,7 @@ protected:
     float b;
     
 public:
-    Circle(float=0.0f, float=0.0f, float=0.005f, float=1.0f, float=1.0f, float=1.0f);
+    Circle(float=0.0f, float=0.0f, float=0.007f, float=1.0f, float=1.0f, float=1.0f);
     
 	//Getters
 	float getX() const;

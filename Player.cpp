@@ -37,28 +37,28 @@ void Player::moveUp()
 	if(yVelo >= 0) 
 		yVelo += 0.0001f;
 	else 
-		yVelo += 0.0002f;
+		yVelo += 0.0003f;
 }
 void Player::moveDown()
 {
 	if(yVelo <= 0) 
 		yVelo -= 0.0001f;
 	else 
-		yVelo -= 0.0002f;
+		yVelo -= 0.0003f;
 }
 void Player::moveRight()
 {
 	if(xVelo >= 0) 
 		xVelo += 0.0001f;
 	else 
-		xVelo += 0.0002f;
+		xVelo += 0.0003f;
 }
 void Player::moveLeft()
 {
 	if(xVelo <= 0) 
 		xVelo -= 0.0001f;
 	else 
-		xVelo -= 0.0002f;
+		xVelo -= 0.0003f;
 }
 
 void Player::playerMove() {

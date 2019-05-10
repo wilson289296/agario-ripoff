@@ -15,12 +15,17 @@ public:
 	std::vector<Circle*> *orbs;
 
 	Player *test;
+	Player *player2;
 	int eaten;
+	
+	bool oneDead;
+	bool twoDead;
 
     Game();
     
     void draw() const ;
     void handleKeyDown(unsigned char, float, float);
+	void handleSpecialKeyDown(int, float, float);
 	
 	//void handleKeyUp(unsigned char, float, float);
 	void createOrbs();
