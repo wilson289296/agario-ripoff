@@ -36,13 +36,13 @@ void App::keyUp(unsigned char key, float x, float y){
 
 void App::specialKeyDown(int key, float x, float y){
 	for (std::vector<AppComponent*>::iterator i = components.begin(); i != components.end(); ++i) {
-		(*i)->handleSpecialKeyUp(key, x, y);
+		(*i)->handleSpecialKeyDown(key, x, y);
 	}
 }
 	
 void App::specialKeyUp(int key, float x, float y){
 	for (std::vector<AppComponent*>::iterator i = components.begin(); i != components.end(); ++i) {
-		(*i)->handleSpecialKeyDown(key, x, y);
+		(*i)->handleSpecialKeyUp(key, x, y);
 	}
 }
 
