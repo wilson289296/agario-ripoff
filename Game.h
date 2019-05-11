@@ -17,6 +17,18 @@ public:
 	std::vector<Player*> *players;
 	int numPlayers;
 	
+	//WASD states
+	bool wDown;
+	bool aDown;
+	bool sDown;
+	bool dDown;
+	
+	//arrow key states
+	bool downDown;
+	bool upDown;
+	bool leftDown;
+	bool rightDown;
+	
 	/*
 	Player *test;
 	Player *player2;
@@ -29,6 +41,7 @@ public:
     
     void draw() const ;
     void handleKeyDown(unsigned char, float, float);
+	void handleKeyUp(unsigned char, float, float);
 	void handleSpecialKeyDown(int, float, float);
 	
 	//void handleKeyUp(unsigned char, float, float);

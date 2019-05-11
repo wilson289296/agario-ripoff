@@ -9,21 +9,30 @@
 Game *singleton;
 
 Game::Game(){
+	wDown = false;
+	aDown = false;
+	sDown = false;
+	dDown = false;
+	upDown = false;
+	downDown = false;
+	leftDown = false;
+	rightDown = false;
+	
     srand(time(NULL));
 	players = new std::vector<Player*>;
 	numPlayers = 2;
 	for(int i = 0; i < numPlayers; i++){
 		if(i == 0){
-			players->push_back(new Player(-1.5, 1, 0.01f, 1, 0, 0, 0, 0));
+			players->push_back(new Player(-1.25, 0.75, 0.01f, 1, 0, 0, 0, 0));
 		}
 		if(i == 1){
-			players->push_back(new Player(1.5, 1, 0.01f, 0, 1, 0, 0, 0));
+			players->push_back(new Player(1.25, 0.75, 0.01f, 0, 1, 0, 0, 0));
 		}
 		if(i == 2){
-			players->push_back(new Player(-1.5, -1, 0.01f, 0, 0, 1, 0, 0));
+			players->push_back(new Player(-1.25, -0.75, 0.01f, 0, 0, 1, 0, 0));
 		}
 		if(i == 3){
-			players->push_back(new Player(1.5, -1, 0.01f, 1, 1, 0, 0, 0));
+			players->push_back(new Player(1.25, -0.75, 0.01f, 1, 1, 0, 0, 0));
 		}
 	}
 	for(int i = 4 - numPlayers; i < 4; i++){
@@ -86,6 +95,17 @@ void Game::action(){
 	bitch->playerMove();
 	*/
 
+	if(wDown){ (players->at(0))->moveUp();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+	if(aDown){ (players->at(0))->moveLeft();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+	if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+	if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+	if(numPlayers > 1){
+		if(upDown) players->at(1)->moveUp();
+		if(downDown) players->at(1)->moveDown();
+		if(leftDown) players->at(1)->moveLeft();
+		if(rightDown) players->at(1)->moveRight();
+	}
+	
 	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
 		(*it)->playerMove();
 		for(std::vector<Player*>::iterator tit = 1 + it; tit < players->end(); tit++){
@@ -116,6 +136,9 @@ void Game::action(){
 		}
 	}	
 	beef:;
+	
+	
+		
 	
 		/*
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
@@ -175,7 +198,17 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 
     if (key == ' '){
 		timer(0);
-    }
+    } else if (key == 'w'){
+		wDown = true;
+	} else if (key == 'a'){
+		aDown = true;
+	} else if (key == 's'){
+		sDown = true;
+	} else if (key == 'd'){
+		dDown = true;
+	} 
+	
+	/*
     if (key == 'w'){
 		(players->at(0))->moveUp();
 		if(numPlayers > 0){
@@ -229,9 +262,20 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		}
 		return;
     }
+	*/
 }
 
 void Game::handleSpecialKeyDown(int key, float x, float y) {
+	if (key == GLUT_KEY_UP){
+		upDown = true;
+	} else if (key == GLUT_KEY_DOWN){
+		downDown = true;
+	} else if (key == GLUT_KEY_RIGHT){
+		rightDown = true;
+	} else if (key == GLUT_KEY_LEFT){
+		leftDown = true;
+	}
+	/*
 	//if(numPlayers >= 2){
 	if (key == GLUT_KEY_UP){
 		(players->at(1))->moveUp();
@@ -285,7 +329,21 @@ void Game::handleSpecialKeyDown(int key, float x, float y) {
 		}
 		return;
 	}
-	
+	*/
+}
+
+
+void Game::handleKeyUp(unsigned char key, float x, float y){
+	//std::cout << "called" << std::endl;
+	if (key == 'w'){
+		wDown = false;
+	} else if (key == 'a'){
+		aDown = false;
+	} else if (key == 's'){
+		sDown = false;
+	} else if (key == 'd'){
+		dDown = false;
+	} 
 }
 
 void Game::createOrbs() {

@@ -34,45 +34,45 @@ void Player::draw() const {
 
 void Player::moveUp()
 {
-	if(yVelo >= -0.0002f) 
-		yVelo += 0.0001f;
+	if(yVelo >= -0.000001f) 
+		yVelo += 0.0000005f;
 	else 
-		yVelo += 0.0002f;
+		yVelo += 0.0000005f;
 }
 void Player::moveDown()
 {
-	if(yVelo <= 0.0002f) 
-		yVelo -= 0.0001f;
+	if(yVelo <= 0.000001f) 
+		yVelo -= 0.0000005f;
 	else 
-		yVelo -= 0.0002f;
+		yVelo -= 0.000001f;
 }
 void Player::moveRight()
 {
-	if(xVelo >= -0.0002f) 
-		xVelo += 0.0001f;
+	if(xVelo >= -0.000001f) 
+		xVelo += 0.0000005f;
 	else 
-		xVelo += 0.0002f;
+		xVelo += 0.000001f;
 }
 void Player::moveLeft()
 {
-	if(xVelo <= -0.0002f) 
-		xVelo -= 0.0001f;
+	if(xVelo <= -0.000001f) 
+		xVelo -= 0.0000005f;
 	else 
-		xVelo -= 0.0002f;
+		xVelo -= 0.000001f;
 }
 
 void Player::playerMove() {
 	if(user->getX() > 1.5 || user->getX() < -1.5){
-		xVelo = 0;
-		if(user->getX() > 1.5) user->setX(1.5);
-		else user->setX(-1.5);
+		xVelo = -xVelo * 0.5;
+		if(user->getX() > 1.5) user->setX(1.49);
+		else user->setX(-1.49);
 	}
 	else user->setX(user->getX() + xVelo);
 	
 	if(user->getY() > 1 || user->getY() < -1){
-		yVelo = 0;
-		if(user->getY() > 1) user->setY(1);
-		else user->setY(-1);
+		yVelo = -yVelo * 0.5;
+		if(user->getY() > 1) user->setY(0.99);
+		else user->setY(-0.99);
 	}
 	else user->setY(user->getY() + yVelo);
 }

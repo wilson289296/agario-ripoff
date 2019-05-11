@@ -28,11 +28,20 @@ void Ai::draw() const{
 }
 
 void Ai::move(){
-	//float amount = 0.0001 * ((rand() % 10) + 1);
-	if(rand() % 10 > 5) setYVelo(getYVelo() + 0.0001);
-	else setYVelo(getYVelo() - 0.0001);
-	if(rand() % 10 > 5) setXVelo(getXVelo() + 0.0001);
-	else setXVelo(getXVelo() - 0.0001);
+	if (getCircle()->getY() > 0){
+		if(rand() % 10 > 5) setYVelo(getYVelo() + 0.00005);
+		else setYVelo(getYVelo() - 0.0001);
+	} else {
+		if(rand() % 10 > 5) setYVelo(getYVelo() + 0.0001);
+		else setYVelo(getYVelo() - 0.00005);
+	}
+	if (getCircle()->getX() > 0){
+		if(rand() % 10 > 5) setXVelo(getXVelo() + 0.00005);
+		else setXVelo(getXVelo() - 0.0001);
+	} else {
+		if(rand() % 10 > 5) setXVelo(getXVelo() + 0.0001);
+		else setXVelo(getXVelo() - 0.00005);
+	}
 }
 
 
