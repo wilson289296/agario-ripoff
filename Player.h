@@ -18,10 +18,10 @@ public:
 	float getYVelo();
 	Circle *getCircle();
 	
-	void moveUp();
-	void moveDown();
-	void moveRight();
-	void moveLeft();
+	virtual void moveUp();
+	virtual void moveDown();
+	virtual void moveRight();
+	virtual void moveLeft();
 	
 	void draw() const;
 	void playerMove();

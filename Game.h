@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "Player.h"
 #include "Circle.h"
+#include "Ai.h"
 #include <vector>
 
 class Game: public AppComponent, private Timer{
@@ -16,6 +17,7 @@ public:
 
 	Player *test;
 	Player *player2;
+	Ai *bitch;
 	int eaten;
 	
 	bool oneDead;
