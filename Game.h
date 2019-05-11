@@ -28,14 +28,6 @@ public:
 	bool upDown;
 	bool leftDown;
 	bool rightDown;
-	
-	/*
-	Player *test;
-	Player *player2;
-	Ai *bitch;
-	*/
-
-	
 
     Game();
     
@@ -43,6 +35,7 @@ public:
     void handleKeyDown(unsigned char, float, float);
 	void handleKeyUp(unsigned char, float, float);
 	void handleSpecialKeyDown(int, float, float);
+	void handleSpecialKeyUp(int, float, float);
 	
 	//void handleKeyUp(unsigned char, float, float);
 	void createOrbs();

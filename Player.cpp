@@ -34,31 +34,31 @@ void Player::draw() const {
 
 void Player::moveUp()
 {
-	if(yVelo >= -0.000001f) 
-		yVelo += 0.0000005f;
+	if(yVelo >= -0.000002f) 
+		yVelo += 0.000001f;
 	else 
-		yVelo += 0.0000005f;
+		yVelo += 0.000002f;
 }
 void Player::moveDown()
 {
-	if(yVelo <= 0.000001f) 
-		yVelo -= 0.0000005f;
-	else 
+	if(yVelo <= 0.000002f) 
 		yVelo -= 0.000001f;
+	else 
+		yVelo -= 0.000002f;
 }
 void Player::moveRight()
 {
-	if(xVelo >= -0.000001f) 
-		xVelo += 0.0000005f;
-	else 
+	if(xVelo >= -0.000002f) 
 		xVelo += 0.000001f;
+	else 
+		xVelo += 0.000002f;
 }
 void Player::moveLeft()
 {
-	if(xVelo <= -0.000001f) 
-		xVelo -= 0.0000005f;
-	else 
+	if(xVelo <= -0.000002f) 
 		xVelo -= 0.000001f;
+	else 
+		xVelo -= 0.000002f;
 }
 
 void Player::playerMove() {

@@ -100,10 +100,10 @@ void Game::action(){
 	if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
 	if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
 	if(numPlayers > 1){
-		if(upDown) players->at(1)->moveUp();
-		if(downDown) players->at(1)->moveDown();
-		if(leftDown) players->at(1)->moveLeft();
-		if(rightDown) players->at(1)->moveRight();
+		if(upDown){ (players->at(1))->moveUp();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+		if(downDown){ (players->at(1))->moveDown();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+		if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
+		if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
 	}
 	
 	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
@@ -332,6 +332,17 @@ void Game::handleSpecialKeyDown(int key, float x, float y) {
 	*/
 }
 
+void Game::handleSpecialKeyUp(int key, float x, float y) {
+	if (key == GLUT_KEY_UP){
+		upDown = false;
+	} else if (key == GLUT_KEY_DOWN){
+		downDown = false;
+	} else if (key == GLUT_KEY_RIGHT){
+		rightDown = false;
+	} else if (key == GLUT_KEY_LEFT){
+		leftDown = false;
+	}
+}
 
 void Game::handleKeyUp(unsigned char key, float x, float y){
 	//std::cout << "called" << std::endl;
