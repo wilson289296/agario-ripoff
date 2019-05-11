@@ -27,19 +27,25 @@ public:
 	bool selectOne;
 	bool triggered;
 	
-	/*
-	Player *test;
-	Player *player2;
-	Ai *bitch;
-	*/
-
+	//WASD states
+	bool wDown;
+	bool aDown;
+	bool sDown;
+	bool dDown;
 	
+	//arrow key states
+	bool downDown;
+	bool upDown;
+	bool leftDown;
+	bool rightDown;
 
     Game();
     
     void draw() const ;
     void handleKeyDown(unsigned char, float, float);
+	void handleKeyUp(unsigned char, float, float);
 	void handleSpecialKeyDown(int, float, float);
+	void handleSpecialKeyUp(int, float, float);
 	
 	//void handleKeyUp(unsigned char, float, float);
 	void createOrbs();
