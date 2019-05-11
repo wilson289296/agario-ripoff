@@ -59,9 +59,7 @@ Game::Game(){
 	*/
 	orbs = new std::vector<Circle*>;
 	
-	oneDead = false;
-	twoDead = false;
-	
+
     setRate(1);
 	singleton = this;
     start();
@@ -76,7 +74,7 @@ void timer(int id){
 	
 	singleton->createOrbs();
 	
-    glutTimerFunc(500, timer, id);
+    glutTimerFunc(200, timer, id);
 }
 
 void Game::action(){
@@ -88,27 +86,36 @@ void Game::action(){
 	bitch->playerMove();
 	*/
 
-	for(std::vector<Player*>::iterator it = players->begin(); it != players->end(); it++){
+	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
 		(*it)->playerMove();
-		for(std::vector<Player*>::iterator tit = 1 + it; tit != players->end(); tit++){
+		for(std::vector<Player*>::iterator tit = 1 + it; tit < players->end(); tit++){
 			if((*it)->getCircle()->contains((*tit)->getCircle()) && (*it)->isDead != true){
-				(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getCircle()->getRad());
-				(*it)->getCircle()->setRad(0);
-				(*it)->isDead = true;
+				if ((*tit)->getCircle()->getRad() > (*it)->getCircle()->getRad()){
+					(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getCircle()->getRad());
+					(*it)->isDead = true;
+					(*it)->getCircle()->setRad(0);
+					break;
+				} else {
+					(*it)->getCircle()->setRad((*it)->getCircle()->getRad() + (*tit)->getCircle()->getRad());
+					(*tit)->isDead = true;
+					(*tit)->getCircle()->setRad(0);
+					break;
+				}
 			}
 		}
 	}
 	
-	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
-		for(std::vector<Player*>::iterator tit = players->begin(); tit != players->end(); tit++){
+	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
+		for(std::vector<Player*>::iterator tit = players->begin(); tit < players->end(); tit++){
 			if((*it)->contains((*tit)->getCircle())){
 				(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getRad()/3);
 				//delete *it;
 				orbs->erase(it);
-				break;
+				goto beef;
 			}
 		}
 	}	
+	beef:;
 	
 		/*
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
@@ -144,7 +151,7 @@ void Game::action(){
 }
 
 void Game::draw() const {
-	for(std::vector<Player*>::iterator it = players->begin(); it != players->end(); it++){
+	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
 		if(!(*it)->isDead){
 			(*it)->draw();
 		}
@@ -157,7 +164,7 @@ void Game::draw() const {
 		player2->draw();
 	bitch->draw();
 	*/
-	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
+	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
 		(*it)->draw();
 	}
 	
@@ -194,22 +201,22 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 void Game::handleSpecialKeyDown(int key, float x, float y) {
 	//if(numPlayers >= 2){
 		if (key == GLUT_KEY_UP){
-			(*(players->begin()+1))->moveUp();
+			(players->at(1))->moveUp();
 			//bitch->moveUp();
 			return;
 		}
 		if (key == GLUT_KEY_DOWN){
-			(*(players->begin()+1))->moveDown();
+			(players->at(1))->moveDown();
 			//bitch->moveDown();
 			return;
 		}
 		if (key == GLUT_KEY_RIGHT){
-			(*(players->begin()+1))->moveRight();
+			(players->at(1))->moveRight();
 			//bitch->moveRight();
 			return;
 		}
 		if (key == GLUT_KEY_LEFT){
-			(*(players->begin()+1))->moveLeft();
+			(players->at(1))->moveLeft();
 			//bitch->moveLeft();
 			return;
 		}

@@ -24,8 +24,6 @@ public:
 	*/
 
 	
-	bool oneDead;
-	bool twoDead;
 
     Game();
     
