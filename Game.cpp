@@ -10,9 +10,53 @@ Game *singleton;
 
 Game::Game(){
     srand(time(NULL));
+	players = new std::vector<Player*>;
+	numPlayers = 2;
+	for(int i = 0; i < numPlayers; i++){
+		if(i == 0){
+			players->push_back(new Player(-1.5, 1, 0.01f, 1, 0, 0, 0, 0));
+		}
+		if(i == 1){
+			players->push_back(new Player(1.5, 1, 0.01f, 0, 1, 0, 0, 0));
+		}
+		if(i == 2){
+			players->push_back(new Player(-1.5, -1, 0.01f, 0, 0, 1, 0, 0));
+		}
+		if(i == 3){
+			players->push_back(new Player(1.5, -1, 0.01f, 1, 1, 0, 0, 0));
+		}
+	}
+	for(int i = 4 - numPlayers; i < 4; i++){
+		if(i == 0){
+			players->push_back(new Ai(-1.5, 1, 0.01f, 1, 0, 0, 0, 0));
+		}
+		if(i == 1){
+			players->push_back(new Ai(1.5, 1, 0.01f, 0, 1, 0, 0, 0));
+		}
+		if(i == 2){
+			players->push_back(new Ai(-1.5, -1, 0.01f, 0, 0, 1, 0, 0));
+		}
+		if(i == 3){
+			players->push_back(new Ai(1.5, -1, 0.01f, 1, 1, 0, 0, 0));
+		}
+	}
+	
+	
+	
+	
+	/*
+	for(int i = 0; i < numPlayers; i++){
+		players->push_back(new Player(-1.5+i*3, 1, 0.01f, 1, 0, 0, 0, 0));
+	}
+	for(int i = 0; i < 4-numPlayers; i++){
+		players->puch_back(new Ai(-1.5+i*3
+	}
+	*/
+	/*
 	test = new Player(1.0f, 1.0f, 0.01f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 	player2 = new Player(-1.0f, -1.0f, 0.01f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f);
 	bitch = new Ai(0, 0, 0.01f, 1, 1, 0, 0, 0);
+	*/
 	orbs = new std::vector<Circle*>;
 	
 	oneDead = false;
@@ -37,10 +81,36 @@ void timer(int id){
 
 void Game::action(){
 
+	
+	/*
 	test->playerMove();
 	player2->playerMove();
 	bitch->playerMove();
+	*/
+
+	for(std::vector<Player*>::iterator it = players->begin(); it != players->end(); it++){
+		(*it)->playerMove();
+		for(std::vector<Player*>::iterator tit = 1 + it; tit != players->end(); tit++){
+			if((*it)->getCircle()->contains((*tit)->getCircle()) && (*it)->isDead != true){
+				(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getCircle()->getRad());
+				(*it)->getCircle()->setRad(0);
+				(*it)->isDead = true;
+			}
+		}
+	}
 	
+	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
+		for(std::vector<Player*>::iterator tit = players->begin(); tit != players->end(); tit++){
+			if((*it)->contains((*tit)->getCircle())){
+				(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getRad()/3);
+				//delete *it;
+				orbs->erase(it);
+				break;
+			}
+		}
+	}	
+	
+		/*
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		if((*it)->contains(test->getCircle())) {
 			//std::cout << "we insidie" << std::endl;
@@ -57,7 +127,8 @@ void Game::action(){
 			break;
 		}
 	}
-	
+	*/
+	/*
 	if(test->getCircle()->contains(player2->getCircle()) && !oneDead)
 	{
 		player2->getCircle()->setRad(player2->getCircle()->getRad() + test->getCircle()->getRad());
@@ -69,17 +140,28 @@ void Game::action(){
 		player2->getCircle()->setRad(0);
 		twoDead = true;
 	}
+	*/
 }
 
 void Game::draw() const {
+	for(std::vector<Player*>::iterator it = players->begin(); it != players->end(); it++){
+		if(!(*it)->isDead){
+			(*it)->draw();
+		}
+	}
+	
+	/*
 	if(!oneDead)
 		test->draw();
 	if(!twoDead)
 		player2->draw();
+	bitch->draw();
+	*/
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it != orbs->end(); ++it) {
 		(*it)->draw();
 	}
-	bitch->draw();
+	
+	
 }
 
 void Game::handleKeyDown(unsigned char key, float x, float y){
@@ -88,48 +170,50 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		timer(0);
     }
     if (key == 'w'){
-		test->moveUp();
-		bitch->moveUp();
+		(players->at(0))->moveUp();
+		//*(players->at(0))->moveUp();
 		return;
     }
     if (key == 's'){
-		test->moveDown();
-		bitch->moveDown();
+		(players->at(0))->moveDown();
+		//bitch->moveDown();
 		return;
     }
 	if (key == 'd'){
-		test->moveRight();
-		bitch->moveRight();
+		(players->at(0))->moveRight();
+		//bitch->moveRight();
 		return;
     }
     if (key == 'a'){
-		test->moveLeft();
-		bitch->moveLeft();
+		(players->at(0))->moveLeft();
+		//bitch->moveLeft();
 		return;
     }
 }
 
 void Game::handleSpecialKeyDown(int key, float x, float y) {
-	if (key == GLUT_KEY_UP){
-		player2->moveUp();
-		bitch->moveUp();
-		return;
-    }
-    if (key == GLUT_KEY_DOWN){
-		player2->moveDown();
-		bitch->moveDown();
-		return;
-    }
-	if (key == GLUT_KEY_RIGHT){
-		player2->moveRight();
-		bitch->moveRight();
-		return;
-    }
-    if (key == GLUT_KEY_LEFT){
-		player2->moveLeft();
-		bitch->moveLeft();
-		return;
-    }
+	//if(numPlayers >= 2){
+		if (key == GLUT_KEY_UP){
+			(*(players->begin()+1))->moveUp();
+			//bitch->moveUp();
+			return;
+		}
+		if (key == GLUT_KEY_DOWN){
+			(*(players->begin()+1))->moveDown();
+			//bitch->moveDown();
+			return;
+		}
+		if (key == GLUT_KEY_RIGHT){
+			(*(players->begin()+1))->moveRight();
+			//bitch->moveRight();
+			return;
+		}
+		if (key == GLUT_KEY_LEFT){
+			(*(players->begin()+1))->moveLeft();
+			//bitch->moveLeft();
+			return;
+		}
+	
 }
 
 void Game::createOrbs() {
@@ -149,6 +233,7 @@ void Game::createOrbs() {
 }
 
 Game::~Game(){
-	delete test;
+	delete orbs;
+	delete players;
     stop();
 }

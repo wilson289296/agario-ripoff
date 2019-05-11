@@ -9,7 +9,8 @@ class Player: public AppComponent {
 	float xVelo;
 	float yVelo;
 public:
-    Player(float=0.0, float=0.0, float rad=0.01, float r=0.0, float g=0.0, float b=0.0, float xVelo=0.0, float yVelo=0.0);
+	bool isDead;
+    Player(float x=0.0, float y=0.0, float rad=0.01, float r=0.0, float g=0.0, float b=0.0, float xVelo=0.0, float yVelo=0.0, bool isDead=false);
     
 	void setXVelo(float);
 	void setYVelo(float);

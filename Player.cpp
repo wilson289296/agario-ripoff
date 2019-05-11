@@ -1,8 +1,8 @@
 #include <iostream>
 #include "Player.h"
 
-Player::Player(float x, float y, float rad, float r, float g, float b, float xVelo, float yVelo):
-	user(new Circle(x, y, rad, r, g, b)), xVelo(xVelo), yVelo(yVelo) {
+Player::Player(float x, float y, float rad, float r, float g, float b, float xVelo, float yVelo, bool isDead):
+	user(new Circle(x, y, rad, r, g, b)), xVelo(xVelo), yVelo(yVelo), isDead(isDead) {
 }
 
 void Player::setXVelo(float xv) 

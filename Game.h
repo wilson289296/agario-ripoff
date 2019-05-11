@@ -14,11 +14,15 @@ class Game: public AppComponent, private Timer{
 public:
 	
 	std::vector<Circle*> *orbs;
-
+	std::vector<Player*> *players;
+	int numPlayers;
+	
+	/*
 	Player *test;
 	Player *player2;
 	Ai *bitch;
-	int eaten;
+	*/
+
 	
 	bool oneDead;
 	bool twoDead;
