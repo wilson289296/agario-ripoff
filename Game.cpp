@@ -178,48 +178,113 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
     }
     if (key == 'w'){
 		(players->at(0))->moveUp();
+		if(numPlayers > 0){
+			(players->at(3))->moveUp();
+			if (numPlayers > 1){
+				(players->at(2))->moveUp();
+				if(numPlayers > 2){
+					(players->at(1))->moveUp();
+				}
+			}
+		}
 		//*(players->at(0))->moveUp();
 		return;
     }
     if (key == 's'){
 		(players->at(0))->moveDown();
-		//bitch->moveDown();
+		if(numPlayers > 0){
+			(players->at(3))->moveDown();
+			if (numPlayers > 1){
+				(players->at(2))->moveDown();
+				if(numPlayers > 2){
+					(players->at(1))->moveDown();
+				}
+			}
+		}
 		return;
     }
 	if (key == 'd'){
 		(players->at(0))->moveRight();
-		//bitch->moveRight();
+		if(numPlayers > 0){
+			(players->at(3))->moveRight();
+			if (numPlayers > 1){
+				(players->at(2))->moveRight();
+				if(numPlayers > 2){
+					(players->at(1))->moveRight();
+				}
+			}
+		}
 		return;
     }
     if (key == 'a'){
 		(players->at(0))->moveLeft();
-		//bitch->moveLeft();
+		if(numPlayers > 0){
+			(players->at(3))->moveLeft();
+			if (numPlayers > 1){
+				(players->at(2))->moveLeft();
+				if(numPlayers > 2){
+					(players->at(1))->moveLeft();
+				}
+			}
+		}
 		return;
     }
 }
 
 void Game::handleSpecialKeyDown(int key, float x, float y) {
 	//if(numPlayers >= 2){
-		if (key == GLUT_KEY_UP){
-			(players->at(1))->moveUp();
-			//bitch->moveUp();
-			return;
+	if (key == GLUT_KEY_UP){
+		(players->at(1))->moveUp();
+		if(numPlayers > 0){
+			(players->at(3))->moveUp();
+			if (numPlayers > 1){
+				(players->at(2))->moveUp();
+				if(numPlayers > 2){
+					(players->at(1))->moveUp();
+				}
+			}
 		}
-		if (key == GLUT_KEY_DOWN){
-			(players->at(1))->moveDown();
-			//bitch->moveDown();
-			return;
+		return;
+	}
+	if (key == GLUT_KEY_DOWN){
+		(players->at(1))->moveDown();
+		if(numPlayers > 0){
+			(players->at(3))->moveDown();
+			if (numPlayers > 1){
+				(players->at(2))->moveDown();
+				if(numPlayers > 2){
+					(players->at(1))->moveDown();
+				}
+			}
 		}
-		if (key == GLUT_KEY_RIGHT){
-			(players->at(1))->moveRight();
-			//bitch->moveRight();
-			return;
+		return;
+	}
+	if (key == GLUT_KEY_RIGHT){
+		(players->at(1))->moveRight();
+		if(numPlayers > 0){
+			(players->at(3))->moveRight();
+			if (numPlayers > 1){
+				(players->at(2))->moveRight();
+				if(numPlayers > 2){
+					(players->at(1))->moveRight();
+				}
+			}
 		}
-		if (key == GLUT_KEY_LEFT){
-			(players->at(1))->moveLeft();
-			//bitch->moveLeft();
-			return;
+		return;
+	}
+	if (key == GLUT_KEY_LEFT){
+		(players->at(1))->moveLeft();
+		if(numPlayers > 0){
+			(players->at(3))->moveLeft();
+			if (numPlayers > 1){
+				(players->at(2))->moveLeft();
+				if(numPlayers > 2){
+					(players->at(1))->moveLeft();
+				}
+			}
 		}
+		return;
+	}
 	
 }
 
