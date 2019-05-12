@@ -19,7 +19,8 @@ public:
 	Circle* selector;
 	std::vector<Circle*> *orbs;
 	std::vector<Player*> *players;
-	std::vector<TextBox*> *scoreboard;
+	std::vector<TextBox*> *ready_scoreboard;
+	std::vector<TextBox*> *sort_scoreboard;
 	
 	int numPlayers;
 	int numAlive;

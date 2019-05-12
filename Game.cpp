@@ -34,7 +34,8 @@ Game::Game(){
 	
 	players = new std::vector<Player*>;
 	orbs = new std::vector<Circle*>;
-	scoreboard = new std::vector<TextBox*>;
+	sort_scoreboard = new std::vector<TextBox*>;
+	ready_scoreboard = new std::vector<TextBox*>;
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
 	win_display = new TextBox("Temp", 0, 0);
@@ -45,10 +46,14 @@ Game::Game(){
 	triggered = false;
 	winner = '\0';
 
-	scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
-	scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
-	scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
-	scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+	sort_scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
+	sort_scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
+	sort_scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+	sort_scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+	ready_scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
+	ready_scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
+	ready_scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+	ready_scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
 	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
 	numPlayers = 0;
 	selectOne = true;
@@ -113,20 +118,6 @@ void Game::action(){
 			if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
 			if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
 		}
-			
-		if(players->size() > 0)
-		{
-			if(wDown){ (players->at(0))->moveUp();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
-			if(aDown){ (players->at(0))->moveLeft();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
-			if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
-			if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
-			if(numPlayers > 1){
-				if(upDown){ (players->at(1))->moveUp();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
-				if(downDown){ (players->at(1))->moveDown();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
-				if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
-				if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
-			}
-		}
 		
 		for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
 			(*it)->playerMove();
@@ -158,7 +149,7 @@ void Game::action(){
 			}
 		}	
 		beef:;
-	//scoreboardSort();
+	scoreboardSort();
 	}
 }
 
@@ -176,10 +167,11 @@ void Game::draw() const {
 		}
 	}
 	
-	if(!menu && !updating) {
-		for(int i = 0; i < scoreboard->size(); i++) {
-			(scoreboard->at(i))->setY(0.95 - (0.05 * i));
-			(scoreboard->at(i))->draw();
+	
+	if(!menu && !updating){
+		for(int i = 0; i < ready_scoreboard->size(); i++) {
+			(ready_scoreboard->at(i))->setY(0.95 - (0.05 * i));
+			(ready_scoreboard->at(i))->draw();
 		}
 	}
 	
@@ -198,6 +190,7 @@ void Game::draw() const {
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
 		(*it)->draw();
 	}
+	
 }
 
 
@@ -316,22 +309,34 @@ void Game::scoreboardSort()
 		
 		for(int i = 0; i < singleton->players->size(); i++)
 		{
+			std::cout << "sort!\n";
 			float curRad = (playerRad->at(i));
-			TextBox *curBoard = singleton->scoreboard->at(i);
+			TextBox *curBoard = sort_scoreboard->at(i);
 			int j = i - 1;
 			while(j >= 0 && (playerRad->at(j) < curRad))
 			{
-				singleton->scoreboard->at(j+1) = (singleton->scoreboard->at(j));
+				//sort_scoreboard->at(j+1) = (sort_scoreboard->at(j));
 				playerRad->at(j+1) = playerRad->at(j);
 				j--;
 			}
 			if(playerRad->at(j+1) != curRad) {
-				singleton->scoreboard->at(j+1) = curBoard;
+				updating = true;
+				TextBox* temp = ready_scoreboard->at(j+1);
+				ready_scoreboard->at(j+1) = curBoard;
+				ready_scoreboard->at(i) = temp;
 				playerRad->at(j+1) = curRad;
+				updating = false;
 			}
+			
 		}
-		delete playerRad;
+		delete playerRad;/*
+		
+		for(int i = 0; i < 4; i++){
+			ready_scoreboard->at(i) = sort_scoreboard->at(i);
+		}
+		*/
 	}
+	
 	
 }
 
