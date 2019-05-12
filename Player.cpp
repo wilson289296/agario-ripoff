@@ -35,30 +35,30 @@ void Player::draw() const {
 void Player::moveUp()
 {
 	if(yVelo >= -0.000002f) 
-		yVelo += 0.000001f;
+		yVelo += 0.000001f * (1/(100 * user->getRad()));
 	else 
-		yVelo += 0.000002f;
+		yVelo += 0.000002f * (1/(100 * user->getRad()));
 }
 void Player::moveDown()
 {
 	if(yVelo <= 0.000002f) 
-		yVelo -= 0.000001f;
+		yVelo -= 0.000001f * (1/(100 * user->getRad()));
 	else 
-		yVelo -= 0.000002f;
+		yVelo -= 0.000002f * (1/(100 * user->getRad()));
 }
 void Player::moveRight()
 {
 	if(xVelo >= -0.000002f) 
-		xVelo += 0.000001f;
+		xVelo += 0.000001f * (1/(100 * user->getRad()));
 	else 
-		xVelo += 0.000002f;
+		xVelo += 0.000002f * (1/(100 * user->getRad()));
 }
 void Player::moveLeft()
 {
 	if(xVelo <= -0.000002f) 
-		xVelo -= 0.000001f;
+		xVelo -= 0.000001f * (1/(100 * user->getRad()));
 	else 
-		xVelo -= 0.000002f;
+		xVelo -= 0.000002f * (1/(100 * user->getRad()));
 }
 
 void Player::playerMove() {

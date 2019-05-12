@@ -16,6 +16,7 @@ public:
 	
 	TextBox* textbox1;
 	TextBox* textbox2;
+	//TextBox* win_display;
 	Circle* selector;
 	std::vector<Circle*> *orbs;
 	std::vector<Player*> *players;
@@ -39,6 +40,7 @@ public:
 	bool leftDown;
 	bool rightDown;
 
+	//constructor
     Game();
     
     void draw() const ;

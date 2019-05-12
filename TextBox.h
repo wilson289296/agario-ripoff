@@ -26,7 +26,17 @@ public:
             float = 1,
             int = 800
     );
-    
+    void setX(float);
+	void setY(float);
+	void setR(float);
+	void setG(float);
+	void setB(float);
+	float getX();
+	float getY();
+	float getR();
+	float getG();
+	float getB();
+	
     void draw() const;
 };
 

@@ -9,10 +9,10 @@
 Game *singleton;
 
 void runAI(int id){
-	if(singleton->menu) {
+	//if(singleton->menu) {
 		singleton->aiMove();
-	}
-	glutTimerFunc(200, runAI, id);
+	//}
+	glutTimerFunc(300, runAI, id);
 }
 
 void timer(int id){
@@ -35,6 +35,7 @@ Game::Game(){
 	orbs = new std::vector<Circle*>;
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
+	//textbox3 = new TextBox("Temp", 0, 0);
 	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
 	numPlayers = 0;
 	selectOne = true;
@@ -52,6 +53,7 @@ Game::Game(){
 void Game::action(){
 	
 	if(numAlive == 1) {
+		
 		numPlayers = 0;
 		reset(numPlayers);
 		std::cout << "GAME OVER" << std::endl;
@@ -259,6 +261,8 @@ void Game::reset(int numPlayers) {
 	xStart = 1.25;
 	yStart = 0.75;
 	
+	for(int i = 0; i < numPlayers; i++){
+	}
 	for(int i= 0; i < numPlayers; i++){
 		if(i == 0){
 			players->push_back(new Player(-xStart, yStart, 0.01f, 1, 0, 0, 0, 0));
@@ -275,16 +279,16 @@ void Game::reset(int numPlayers) {
 	}
 	for(int i = 0; i < 4 - numPlayers; i++){
 		if(i == 3){
-			players->push_back(new Ai(-xStart, yStart, 0.01f, 1, 0, 0, 0, 0));
+			players->push_back(new Ai(xStart, -yStart, 0.01f, 1, 0, 0, 0, 0));
 		}
 		if(i == 2){
-			players->push_back(new Ai(xStart, yStart, 0.01f, 0, 1, 0, 0, 0));
+			players->push_back(new Ai(-xStart, -yStart, 0.01f, 0, 1, 0, 0, 0));
 		}
 		if(i == 1){
-			players->push_back(new Ai(-xStart, -yStart, 0.01f, 0, 0, 1, 0, 0));
+			players->push_back(new Ai(xStart, yStart, 0.01f, 0, 0, 1, 0, 0));
 		}
 		if(i == 0){
-			players->push_back(new Ai(xStart, -yStart, 0.01f, 1, 1, 0, 0, 0));
+			players->push_back(new Ai(-xStart, yStart, 0.01f, 1, 1, 0, 0, 0));
 		}
 	}
 }
