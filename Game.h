@@ -8,6 +8,7 @@
 #include "Circle.h"
 #include "Ai.h"
 #include "Textbox.h"
+#include "Colors.h"
 #include <vector>
 
 class Game: public AppComponent, private Timer{
@@ -21,6 +22,8 @@ public:
 	std::vector<Player*> *players;
 	std::vector<TextBox*> *ready_scoreboard;
 	std::vector<TextBox*> *sort_scoreboard;
+
+	std::vector<Colors*> *playerColors;
 	
 	int numPlayers;
 	int numAlive;

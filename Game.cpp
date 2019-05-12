@@ -36,6 +36,8 @@ Game::Game(){
 	orbs = new std::vector<Circle*>;
 	sort_scoreboard = new std::vector<TextBox*>;
 	ready_scoreboard = new std::vector<TextBox*>;
+	playerColors = new std::vector<Colors*>;
+
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
 	win_display = new TextBox("Temp", 0, 0);
@@ -45,15 +47,18 @@ Game::Game(){
 	selectOne = true;
 	triggered = false;
 	winner = '\0';
-
-	sort_scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
-	sort_scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
-	sort_scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
-	sort_scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+	
 	ready_scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
-	ready_scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
-	ready_scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+	ready_scoreboard->push_back(new TextBox("Green", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+	ready_scoreboard->push_back(new TextBox("Blue", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
 	ready_scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+	
+	
+	playerColors->push_back(new Colors(1, 0, 0));
+	playerColors->push_back(new Colors(0, 1, 0));
+	playerColors->push_back(new Colors(0, 0, 1));
+	playerColors->push_back(new Colors(1, 1, 0));
+	
 	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
 	numPlayers = 0;
 	selectOne = true;
@@ -155,42 +160,42 @@ void Game::action(){
 
 void Game::draw() const {
 	
-	if(win_screen){
-		win_display->draw();
-	}
-	
-	if(!win_screen){
+	if(!resetting) {
+		if(win_screen){
+			win_display->draw();
+		}
+		
+		if(!win_screen){
+			if(menu) {
+				textbox1->draw();
+				textbox2->draw();
+				selector->draw();
+			}
+		}
+		
+		if(!menu && !updating){
+			for(int i = 0; i < ready_scoreboard->size(); i++) {
+				(ready_scoreboard->at(i))->setY(0.95 - (0.05 * i));
+				(ready_scoreboard->at(i))->draw();
+			}
+		}
+		
 		if(menu) {
 			textbox1->draw();
 			textbox2->draw();
 			selector->draw();
 		}
-	}
-	
-	
-	if(!menu && !updating){
-		for(int i = 0; i < ready_scoreboard->size(); i++) {
-			(ready_scoreboard->at(i))->setY(0.95 - (0.05 * i));
-			(ready_scoreboard->at(i))->draw();
+		
+		for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
+			if(!(*it)->isDead){
+				(*it)->draw();
+			}
 		}
-	}
-	
-	if(menu) {
-		textbox1->draw();
-		textbox2->draw();
-		selector->draw();
-	}
-	
-	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
-		if(!(*it)->isDead){
+		
+		for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
 			(*it)->draw();
 		}
 	}
-	
-	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
-		(*it)->draw();
-	}
-	
 }
 
 
@@ -300,41 +305,44 @@ void Game::handleKeyUp(unsigned char key, float x, float y){
 void Game::scoreboardSort()
 {
 	if(!singleton->menu) {
+		updating = true;
 		std::vector<float> *playerRad = new std::vector<float>;
-		for(int i = 0; i < singleton->players->size(); i++)
-			playerRad->push_back(((singleton->players->at(i))->getCircle())->getRad());
+		std::vector<TextBox*> *tempScore = new std::vector<TextBox*>;
+		
+		for(int i = 0; i < players->size(); i++)
+			playerRad->push_back(((players->at(i))->getCircle())->getRad());
+		
+		tempScore->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
+		tempScore->push_back(new TextBox("Green", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+		tempScore->push_back(new TextBox("Blue", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
+		tempScore->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
 		
 		// We use insertion sort, because the players vector is size 4, and is small
 		// And we heard insertion sort is good for small n's
 		
-		for(int i = 0; i < singleton->players->size(); i++)
+		for(int i = 0; i < players->size(); i++)
 		{
-			std::cout << "sort!\n";
 			float curRad = (playerRad->at(i));
-			TextBox *curBoard = sort_scoreboard->at(i);
+			TextBox *curBoard = tempScore->at(i);
 			int j = i - 1;
 			while(j >= 0 && (playerRad->at(j) < curRad))
 			{
-				//sort_scoreboard->at(j+1) = (sort_scoreboard->at(j));
 				playerRad->at(j+1) = playerRad->at(j);
+				tempScore->at(j+1) = tempScore->at(j);
 				j--;
 			}
 			if(playerRad->at(j+1) != curRad) {
-				updating = true;
-				TextBox* temp = ready_scoreboard->at(j+1);
-				ready_scoreboard->at(j+1) = curBoard;
-				ready_scoreboard->at(i) = temp;
+				tempScore->at(j+1) = curBoard;
 				playerRad->at(j+1) = curRad;
-				updating = false;
 			}
-			
+		updating = false;
 		}
-		delete playerRad;/*
 		
-		for(int i = 0; i < 4; i++){
-			ready_scoreboard->at(i) = sort_scoreboard->at(i);
-		}
-		*/
+		for(int i = 0; i < tempScore->size(); i++)
+			ready_scoreboard->at(i) = tempScore->at(i);
+		
+		delete tempScore;
+		delete playerRad;
 	}
 	
 	
@@ -392,12 +400,12 @@ void Game::reset(int numPlayers) {
 			ySpawn = -yStart;
 		if(playersSpawned > 0)
 		{
-			players->push_back(new Player(xSpawn, ySpawn, 0.01f, 1, 0, 0, 0, 0, false));
+			players->push_back(new Player(xSpawn, ySpawn, 0.01f, playerColors->at(i)->getR(), playerColors->at(i)->getG(), playerColors->at(i)->getB(), 0, 0, false));
 			playersSpawned--;
 		}
 		else
 		{
-			players->push_back(new Ai(xSpawn, ySpawn, 0.01f, 1, 0, 1, 0, 0));
+			players->push_back(new Ai(xSpawn, ySpawn, 0.01f, playerColors->at(i)->getR(), playerColors->at(i)->getG(), playerColors->at(i)->getB(), 0, 0));
 		}
 	}
 	resetting = false;
