@@ -19,6 +19,8 @@ public:
 	Circle* selector;
 	std::vector<Circle*> *orbs;
 	std::vector<Player*> *players;
+	std::vector<TextBox*> *scoreboard;
+	
 	int numPlayers;
 	int numAlive;
 	float xStart;
@@ -26,8 +28,13 @@ public:
 	bool menu;
 	bool win_screen;
 	bool selectOne;
+
 	bool triggered;
 	char winner;
+
+	bool resetting;
+	bool updating;
+
 	
 	//WASD states
 	bool wDown;
@@ -56,6 +63,7 @@ public:
     void action();
 	void reset(int numPlayers);
 	void deleteVectors();
+	void scoreboardSort();
 	
 	friend void timer(int);
 	friend void runAI(int);

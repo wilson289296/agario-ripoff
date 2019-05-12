@@ -12,7 +12,7 @@ void runAI(int id){
 	//if(singleton->menu) {
 		singleton->aiMove();
 	//}
-	glutTimerFunc(300, runAI, id);
+	glutTimerFunc(200, runAI, id);
 }
 
 void timer(int id){
@@ -34,6 +34,7 @@ Game::Game(){
 	
 	players = new std::vector<Player*>;
 	orbs = new std::vector<Circle*>;
+	scoreboard = new std::vector<TextBox*>;
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
 	win_display = new TextBox("Temp", 0, 0);
@@ -43,6 +44,15 @@ Game::Game(){
 	selectOne = true;
 	triggered = false;
 	winner = '\0';
+
+	scoreboard->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
+	scoreboard->push_back(new TextBox("Blue", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
+	scoreboard->push_back(new TextBox("Green", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+	scoreboard->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
+	numPlayers = 0;
+	selectOne = true;
+	updating = false;
 	
 	reset(numPlayers); 
 
@@ -55,84 +65,101 @@ Game::Game(){
 
 void Game::action(){
 	
-	if(numAlive == 1) {
-		win_screen = true;
-		numPlayers = 0;
-		for(int tit = 0; tit < 4; tit++){
-			if(!(players->at(tit))->isDead){
-				if(tit == 0){
-					winner = 'r';
-					win_display->setR(1);
-					win_display->setG(0);
-					win_display->setB(0);
-					win_display->setText("Red wins!");
-				} else if (tit == 1){
-					winner = 'g';
-					win_display->setR(0);
-					win_display->setG(1);
-					win_display->setB(0);
-					win_display->setText("Green wins!");
-				} else if (tit == 2){
-					winner = 'b';
-					win_display->setR(0);
-					win_display->setG(0);
-					win_display->setB(1);
-					win_display->setText("Blue wins!");
-				} else if (tit == 3){
-					winner = 'y';
-					win_display->setR(1);
-					win_display->setG(1);
-					win_display->setB(0);
-					win_display->setText("Yellow wins!");
+	if(!resetting) {
+		if(numAlive == 1) {
+			win_screen = true;
+			numPlayers = 0;
+			for(int tit = 0; tit < 4; tit++){
+				if(!(players->at(tit))->isDead){
+					if(tit == 0){
+						winner = 'r';
+						win_display->setR(1);
+						win_display->setG(0);
+						win_display->setB(0);
+						win_display->setText("Red wins!");
+					} else if (tit == 1){
+						winner = 'g';
+						win_display->setR(0);
+						win_display->setG(1);
+						win_display->setB(0);
+						win_display->setText("Green wins!");
+					} else if (tit == 2){
+						winner = 'b';
+						win_display->setR(0);
+						win_display->setG(0);
+						win_display->setB(1);
+						win_display->setText("Blue wins!");
+					} else if (tit == 3){
+						winner = 'y';
+						win_display->setR(1);
+						win_display->setG(1);
+						win_display->setB(0);
+						win_display->setText("Yellow wins!");
+					}
 				}
 			}
+			//if(!win_screen) reset(numPlayers);
+			//std::cout << "GAME OVER" << std::endl;
+			return;
 		}
-		//if(!win_screen) reset(numPlayers);
-		std::cout << "GAME OVER" << std::endl;
-		return;
-	}
 
-	if(wDown){ (players->at(0))->moveUp();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
-	if(aDown){ (players->at(0))->moveLeft();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
-	if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
-	if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
-	if(numPlayers > 1){
-		if(upDown){ (players->at(1))->moveUp();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
-		if(downDown){ (players->at(1))->moveDown();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
-		if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
-		if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
-	}
-	
-	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
-		(*it)->playerMove();
-		for(std::vector<Player*>::iterator tit = 1 + it; tit < players->end(); tit++){
-			if((*it)->getCircle()->contains((*tit)->getCircle()) && (*it)->isDead != true){
-				if ((*tit)->getCircle()->getRad() > (*it)->getCircle()->getRad()){
-					(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getCircle()->getRad());
-					(*it)->isDead = true;
-					(*it)->getCircle()->setRad(0);
-				} else {
-					(*it)->getCircle()->setRad((*it)->getCircle()->getRad() + (*tit)->getCircle()->getRad());
-					(*tit)->isDead = true;
-					(*tit)->getCircle()->setRad(0);
+		if(wDown){ (players->at(0))->moveUp();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+		if(aDown){ (players->at(0))->moveLeft();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+		if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+		if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+		if(numPlayers > 1){
+			if(upDown){ (players->at(1))->moveUp();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+			if(downDown){ (players->at(1))->moveDown();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+			if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
+			if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
+		}
+			
+		if(players->size() > 0)
+		{
+			if(wDown){ (players->at(0))->moveUp();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+			if(aDown){ (players->at(0))->moveLeft();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+			if(sDown){ (players->at(0))->moveDown();} else {(players->at(0))->setYVelo((players->at(0))->getYVelo() * 0.999);}
+			if(dDown){ (players->at(0))->moveRight();} else {(players->at(0))->setXVelo((players->at(0))->getXVelo() * 0.999);}
+			if(numPlayers > 1){
+				if(upDown){ (players->at(1))->moveUp();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+				if(downDown){ (players->at(1))->moveDown();} else {(players->at(1))->setYVelo((players->at(1))->getYVelo() * 0.999);}
+				if(leftDown){ (players->at(1))->moveLeft();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
+				if(rightDown){ (players->at(1))->moveRight();} else {(players->at(1))->setXVelo((players->at(1))->getXVelo() * 0.999);}
+			}
+		}
+		
+		for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
+			(*it)->playerMove();
+			for(std::vector<Player*>::iterator tit = 1 + it; tit < players->end(); tit++){
+				if((*it)->getCircle()->contains((*tit)->getCircle()) && (*it)->isDead != true){
+					if ((*tit)->getCircle()->getRad() > (*it)->getCircle()->getRad()){
+						(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getCircle()->getRad());
+						(*it)->isDead = true;
+						(*it)->getCircle()->setRad(0);
+					} else {
+						(*it)->getCircle()->setRad((*it)->getCircle()->getRad() + (*tit)->getCircle()->getRad());
+						(*tit)->isDead = true;
+						(*tit)->getCircle()->setRad(0);
+					}
+					numAlive--;
+					break;
 				}
-				numAlive--;
-				break;
 			}
 		}
+		
+		for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
+			for(std::vector<Player*>::iterator tit = players->begin(); tit < players->end(); tit++){
+				if((*it)->contains((*tit)->getCircle())){
+					(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getRad()/3);
+					//delete *it;
+					orbs->erase(it);
+					goto beef;
+				}
+			}
+		}	
+		beef:;
+	//scoreboardSort();
 	}
-	
-	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
-		for(std::vector<Player*>::iterator tit = players->begin(); tit < players->end(); tit++){
-			if((*it)->contains((*tit)->getCircle())){
-				(*tit)->getCircle()->setRad((*tit)->getCircle()->getRad() + (*it)->getRad()/3);
-				//delete *it;
-				orbs->erase(it);
-				goto beef;
-			}
-		}
-	}	
-	beef:;
 }
 
 void Game::draw() const {
@@ -149,6 +176,19 @@ void Game::draw() const {
 		}
 	}
 	
+	if(!menu && !updating) {
+		for(int i = 0; i < scoreboard->size(); i++) {
+			(scoreboard->at(i))->setY(0.95 - (0.05 * i));
+			(scoreboard->at(i))->draw();
+		}
+	}
+	
+	if(menu) {
+		textbox1->draw();
+		textbox2->draw();
+		selector->draw();
+	}
+	
 	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
 		if(!(*it)->isDead){
 			(*it)->draw();
@@ -158,8 +198,8 @@ void Game::draw() const {
 	for(std::vector<Circle*>::iterator it = orbs->begin(); it < orbs->end(); ++it) {
 		(*it)->draw();
 	}
-	
 }
+
 
 void Game::handleKeyDown(unsigned char key, float x, float y){
 
@@ -264,6 +304,37 @@ void Game::handleKeyUp(unsigned char key, float x, float y){
 	} 
 }
 
+void Game::scoreboardSort()
+{
+	if(!singleton->menu) {
+		std::vector<float> *playerRad = new std::vector<float>;
+		for(int i = 0; i < singleton->players->size(); i++)
+			playerRad->push_back(((singleton->players->at(i))->getCircle())->getRad());
+		
+		// We use insertion sort, because the players vector is size 4, and is small
+		// And we heard insertion sort is good for small n's
+		
+		for(int i = 0; i < singleton->players->size(); i++)
+		{
+			float curRad = (playerRad->at(i));
+			TextBox *curBoard = singleton->scoreboard->at(i);
+			int j = i - 1;
+			while(j >= 0 && (playerRad->at(j) < curRad))
+			{
+				singleton->scoreboard->at(j+1) = (singleton->scoreboard->at(j));
+				playerRad->at(j+1) = playerRad->at(j);
+				j--;
+			}
+			if(playerRad->at(j+1) != curRad) {
+				singleton->scoreboard->at(j+1) = curBoard;
+				playerRad->at(j+1) = curRad;
+			}
+		}
+		delete playerRad;
+	}
+	
+}
+
 void Game::createOrbs() {
 	float randX = (((float)rand() / (float) RAND_MAX) * 3.5) - 2;
 	float randY = (((float)rand() / (float) RAND_MAX) * 2.0) - 1;
@@ -282,7 +353,7 @@ void Game::deleteVectors() {
 }
 
 void Game::reset(int numPlayers) {
-	
+	resetting = true;
 	deleteVectors();
 	players->clear();
 	orbs->clear();
@@ -302,36 +373,29 @@ void Game::reset(int numPlayers) {
 	xStart = 1.25;
 	yStart = 0.75;
 	
-	for(int i = 0; i < numPlayers; i++){
-	}
-	for(int i= 0; i < numPlayers; i++){
-		if(i == 0){
-			players->push_back(new Player(-xStart, yStart, 0.01f, 1, 0, 0, 0, 0));
+	int playersSpawned = numPlayers;
+	
+	for(int i= 0; i < 4; i++){
+		float xSpawn, ySpawn;
+		if(i%2 == 0)
+			xSpawn = -xStart;
+		else
+			xSpawn = xStart;
+		if(i < 2)
+			ySpawn = yStart;
+		else
+			ySpawn = -yStart;
+		if(playersSpawned > 0)
+		{
+			players->push_back(new Player(xSpawn, ySpawn, 0.01f, 1, 0, 0, 0, 0, false));
+			playersSpawned--;
 		}
-		if(i == 1){
-			players->push_back(new Player(xStart, yStart, 0.01f, 0, 1, 0, 0, 0));
-		}
-		if(i == 2){
-			players->push_back(new Player(-xStart, -yStart, 0.01f, 0, 0, 1, 0, 0));
-		}
-		if(i == 3){
-			players->push_back(new Player(xStart, -yStart, 0.01f, 1, 1, 0, 0, 0));
-		}
-	}
-	for(int i = 0; i < 4 - numPlayers; i++){
-		if(i == 3){
-			players->push_back(new Ai(xStart, -yStart, 0.01f, 1, 0, 0, 0, 0));
-		}
-		if(i == 2){
-			players->push_back(new Ai(-xStart, -yStart, 0.01f, 0, 1, 0, 0, 0));
-		}
-		if(i == 1){
-			players->push_back(new Ai(xStart, yStart, 0.01f, 0, 0, 1, 0, 0));
-		}
-		if(i == 0){
-			players->push_back(new Ai(-xStart, yStart, 0.01f, 1, 1, 0, 0, 0));
+		else
+		{
+			players->push_back(new Ai(xSpawn, ySpawn, 0.01f, 1, 0, 1, 0, 0));
 		}
 	}
+	resetting = false;
 }
 
 Game::~Game(){
