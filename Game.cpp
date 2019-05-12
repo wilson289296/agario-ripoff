@@ -77,39 +77,42 @@ void Game::action(){
 	
 	if(!resetting) {
 		if(numAlive == 1) {
-			win_screen = true;
-			numPlayers = 0;
-			for(int tit = 0; tit < 4; tit++){
-				if(!(players->at(tit))->isDead){
-					if(tit == 0){
-						winner = 'r';
-						win_display->setR(1);
-						win_display->setG(0);
-						win_display->setB(0);
-						win_display->setText("Red wins!");
-					} else if (tit == 1){
-						winner = 'g';
-						win_display->setR(0);
-						win_display->setG(1);
-						win_display->setB(0);
-						win_display->setText("Green wins!");
-					} else if (tit == 2){
-						winner = 'b';
-						win_display->setR(0);
-						win_display->setG(0);
-						win_display->setB(1);
-						win_display->setText("Blue wins!");
-					} else if (tit == 3){
-						winner = 'y';
-						win_display->setR(1);
-						win_display->setG(1);
-						win_display->setB(0);
-						win_display->setText("Yellow wins!");
+			if(!menu) {
+				win_screen = true;
+				numPlayers = 0;
+				for(int tit = 0; tit < 4; tit++){
+					if(!(players->at(tit))->isDead){
+						if(tit == 0){
+							winner = 'r';
+							win_display->setR(0.7);
+							win_display->setG(0);
+							win_display->setB(0);
+							win_display->setText("Red wins!");
+						} else if (tit == 1){
+							winner = 'g';
+							win_display->setR(0);
+							win_display->setG(0.7);
+							win_display->setB(0);
+							win_display->setText("Green wins!");
+						} else if (tit == 2){
+							winner = 'b';
+							win_display->setR(0);
+							win_display->setG(0);
+							win_display->setB(0.7);
+							win_display->setText("Blue wins!");
+						} else if (tit == 3){
+							winner = 'y';
+							win_display->setR(0.7);
+							win_display->setG(0.7);
+							win_display->setB(0);
+							win_display->setText("Yellow wins!");
+						}
 					}
 				}
 			}
-			//if(!win_screen) reset(numPlayers);
-			//std::cout << "GAME OVER" << std::endl;
+			else {
+				reset(numPlayers);
+			}
 			return;
 		}
 
@@ -175,8 +178,16 @@ void Game::draw() const {
 		
 		if(!menu && !updating){
 			for(int i = 0; i < ready_scoreboard->size(); i++) {
-				(ready_scoreboard->at(i))->setY(0.95 - (0.05 * i));
-				(ready_scoreboard->at(i))->draw();
+				float curR = ready_scoreboard->at(i)->getR();
+				float curB = ready_scoreboard->at(i)->getB();
+				float curG = ready_scoreboard->at(i)->getG();
+				for(int j = 0; j < players->size(); j++)
+				{
+					if(players->at(j)->getCircle()->getR() == curR && players->at(j)->getCircle()->getB() == curB && players->at(j)->getCircle()->getG() == curG && !players->at(j)->isDead) {
+						(ready_scoreboard->at(i))->setY(0.95 - (0.05 * i));
+						(ready_scoreboard->at(i))->draw();
+					}
+				}
 			}
 		}
 		
@@ -219,7 +230,16 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 		} 
 		else if (key == 'd'){
 			dDown = true;
-		} 
+		}
+		/*
+		---------------------FOR DEBUGGING ONLY---------------------
+		else if (key == 'k'){
+			players->at(3)->isDead = true;
+			players->at(2)->isDead = true;
+			numAlive-=2;
+			players->at(1)->getCircle()->setRad(0.5);
+		}
+		*/
 	}
 	else if(menu){
 		if (key == 13) {
@@ -304,7 +324,7 @@ void Game::handleKeyUp(unsigned char key, float x, float y){
 
 void Game::scoreboardSort()
 {
-	if(!singleton->menu) {
+	if(!menu) {
 		updating = true;
 		std::vector<float> *playerRad = new std::vector<float>;
 		std::vector<TextBox*> *tempScore = new std::vector<TextBox*>;
@@ -312,10 +332,10 @@ void Game::scoreboardSort()
 		for(int i = 0; i < players->size(); i++)
 			playerRad->push_back(((players->at(i))->getCircle())->getRad());
 		
-		tempScore->push_back(new TextBox("Red", 1.5, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
-		tempScore->push_back(new TextBox("Green", 1.5, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
-		tempScore->push_back(new TextBox("Blue", 1.5, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
-		tempScore->push_back(new TextBox("Yellow", 1.5, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
+		tempScore->push_back(new TextBox("Red", 1.40, 0.95, GLUT_BITMAP_HELVETICA_18, 1, 0, 0));
+		tempScore->push_back(new TextBox("Green", 1.40, 0.90, GLUT_BITMAP_HELVETICA_18, 0, 1, 0));
+		tempScore->push_back(new TextBox("Blue", 1.40, 0.85, GLUT_BITMAP_HELVETICA_18, 0, 0, 1));
+		tempScore->push_back(new TextBox("Yellow", 1.40, 0.80, GLUT_BITMAP_HELVETICA_18, 1, 1, 0));
 		
 		// We use insertion sort, because the players vector is size 4, and is small
 		// And we heard insertion sort is good for small n's

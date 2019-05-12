@@ -17,6 +17,16 @@ float Circle::getRad() const {
 	return rad;
 }
 
+float Circle::getR() const {
+	return r;
+}
+float Circle::getG() const {
+	return g;
+}
+float Circle::getB() const {
+	return b;
+}
+
 //--------------------Setters--------------------//
 void Circle::setX(float x) {
 	this->x = x;

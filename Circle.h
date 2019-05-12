@@ -21,6 +21,9 @@ public:
 	float getX() const;
 	float getY() const;
 	float getRad() const;
+	float getR() const;
+	float getG() const;
+	float getB() const;
 	
 	//Setters
 	void setX(float);
