@@ -26,6 +26,7 @@ public:
             float = 1,
             int = 800
     );
+	void setText(std::string);
     void setX(float);
 	void setY(float);
 	void setR(float);

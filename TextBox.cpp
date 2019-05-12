@@ -32,4 +32,38 @@ void TextBox::draw() const {
         int w = glutBitmapWidth(font, text[i]);
         offset += ((float)w / width)*2;
     }
-    }
+}
+
+void TextBox::setText(std::string temp){
+	text = temp;
+}
+void TextBox::setX(float newX){
+	x = newX;
+}
+void TextBox::setY(float newY){
+	y = newY;
+}
+void TextBox::setR(float newR){
+	r = newR;
+}
+void TextBox::setG(float newG){
+	g = newG;
+}
+void TextBox::setB(float newB){
+	b = newB;
+}
+float TextBox::getX(){
+	return x;
+}
+float TextBox::getY(){
+	return y;
+}
+float TextBox::getR(){
+	return r;
+}
+float TextBox::getG(){
+	return g;
+}
+float TextBox::getB(){
+	return b;
+}

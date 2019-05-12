@@ -7,7 +7,7 @@
 
 class Ai: public AppComponent, public Player{
 	public:
-		Ai(float, float, float, float, float, float, float, float);
+		Ai(float = 0, float = 0, float = 0.01, float = 1, float = 1, float = 1, float = 0, float = 0);
 		void moveUp();
 		void moveDown();
 		void moveRight();

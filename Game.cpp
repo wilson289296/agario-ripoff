@@ -35,13 +35,14 @@ Game::Game(){
 	orbs = new std::vector<Circle*>;
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
-	//textbox3 = new TextBox("Temp", 0, 0);
+	win_display = new TextBox("Temp", 0, 0);
 	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
 	numPlayers = 0;
 	selectOne = true;
 	triggered = false;
+	winner = '\0';
 	
-	reset(numPlayers);
+	reset(numPlayers); 
 
     setRate(1);
 	singleton = this;
@@ -53,8 +54,36 @@ Game::Game(){
 void Game::action(){
 	
 	if(numAlive == 1) {
-		
 		numPlayers = 0;
+		for(int tit = 0; tit < 4; tit++){
+			if(!(players->at(tit))->isDead){
+				if(tit == 0){
+					winner = 'r';
+					win_display->setR(1);
+					win_display->setG(0);
+					win_display->setB(0);
+					win_display->setText("Red wins!");
+				} else if (tit == 1){
+					winner = 'g';
+					win_display->setR(0);
+					win_display->setG(1);
+					win_display->setB(0);
+					win_display->setText("Green wins!");
+				} else if (tit == 2){
+					winner = 'b';
+					win_display->setR(0);
+					win_display->setG(0);
+					win_display->setB(1);
+					win_display->setText("Blue wins!");
+				} else if (tit == 3){
+					winner = 'y';
+					win_display->setR(1);
+					win_display->setG(1);
+					win_display->setB(0);
+					win_display->setText("Yellow wins!");
+				}
+			}
+		}
 		reset(numPlayers);
 		std::cout << "GAME OVER" << std::endl;
 		return;
@@ -109,6 +138,9 @@ void Game::draw() const {
 		textbox1->draw();
 		textbox2->draw();
 		selector->draw();
+		if(winner != '\0'){
+			win_display->draw();
+		}
 	}
 	
 	for(std::vector<Player*>::iterator it = players->begin(); it < players->end(); it++){
@@ -242,6 +274,7 @@ void Game::deleteVectors() {
 }
 
 void Game::reset(int numPlayers) {
+	
 	deleteVectors();
 	players->clear();
 	orbs->clear();
@@ -299,6 +332,7 @@ Game::~Game(){
 	delete players;
 	delete textbox1;
 	delete textbox2;
+	delete win_display;
 	delete selector;
     stop();
 }
