@@ -24,6 +24,7 @@ public:
 	float xStart;
 	float yStart;
 	bool menu;
+	bool win_screen;
 	bool selectOne;
 	bool triggered;
 	char winner;

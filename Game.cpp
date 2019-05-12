@@ -21,8 +21,9 @@ void timer(int id){
 	
     // If you want to manipulate the app in here
     // do it through the singleton pointer
-	
+	if(!singleton->win_screen){
 	singleton->createOrbs();
+	}
 	
 	
     glutTimerFunc(500, timer, id);
@@ -36,6 +37,7 @@ Game::Game(){
 	textbox1 = new TextBox("One Player", -0.25, -0.25);
 	textbox2 = new TextBox("Two Player", -0.25, -0.50);
 	win_display = new TextBox("Temp", 0, 0);
+	win_screen = false;
 	selector = new Circle(-0.30, -0.235, 0.015f, 0, 1, 1);
 	numPlayers = 0;
 	selectOne = true;
@@ -54,6 +56,7 @@ Game::Game(){
 void Game::action(){
 	
 	if(numAlive == 1) {
+		win_screen = true;
 		numPlayers = 0;
 		for(int tit = 0; tit < 4; tit++){
 			if(!(players->at(tit))->isDead){
@@ -84,7 +87,7 @@ void Game::action(){
 				}
 			}
 		}
-		reset(numPlayers);
+		//if(!win_screen) reset(numPlayers);
 		std::cout << "GAME OVER" << std::endl;
 		return;
 	}
@@ -134,12 +137,15 @@ void Game::action(){
 
 void Game::draw() const {
 	
-	if(menu) {
-		textbox1->draw();
-		textbox2->draw();
-		selector->draw();
-		if(winner != '\0'){
-			win_display->draw();
+	if(win_screen){
+		win_display->draw();
+	}
+	
+	if(!win_screen){
+		if(menu) {
+			textbox1->draw();
+			textbox2->draw();
+			selector->draw();
 		}
 	}
 	
@@ -158,6 +164,10 @@ void Game::draw() const {
 void Game::handleKeyDown(unsigned char key, float x, float y){
 
     if (key == ' '){
+		if(win_screen){
+			win_screen = false;
+			reset(0);
+		}
     }
 	if(!menu){
 		if (key == 'w'){
@@ -185,7 +195,6 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 				reset(numPlayers);
 				menu = false;
 			}
-			
 			return;
 		}
 	}
@@ -193,7 +202,6 @@ void Game::handleKeyDown(unsigned char key, float x, float y){
 
 void Game::handleSpecialKeyDown(int key, float x, float y) {
 	if(numPlayers >= 2 && !menu){
-		
 		if (key == GLUT_KEY_UP){
 			upDown = true;
 		} else if (key == GLUT_KEY_DOWN){
@@ -240,7 +248,7 @@ void Game::handleSpecialKeyUp(int key, float x, float y) {
 		rightDown = false;
 	} else if (key == GLUT_KEY_LEFT){
 		leftDown = false;
-	}
+	} 
 }
 
 void Game::handleKeyUp(unsigned char key, float x, float y){
